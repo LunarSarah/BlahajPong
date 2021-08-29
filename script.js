@@ -3,12 +3,17 @@ let animate = window.requestAnimationFrame ||
   window.mozRequestAnimationFrame ||
   function(callback) { window.setTimeout(callback, 1000/60) };
 
+const img = new Image(); 
+img.src = "shark.jpg";
+
 let canvas = document.createElement('canvas');
 let width = 400;
 let height = 600;
 canvas.width = width;
 canvas.height = height;
 let context = canvas.getContext('2d');
+canvas.style = "position:absolute; left: 50%; width: 400px; margin-left: -200px;";
+
 
 window.onload = function() {
   document.body.appendChild(canvas);
@@ -134,11 +139,11 @@ Paddle.prototype.render = function() {
 };
 
 function Player() {
-   this.paddle = new Paddle(175, 580, 50, 10);
+   this.paddle = new Paddle(175, 580, 200, 30);
 }
 
 function Computer() {
-  this.paddle = new Paddle(175, 10, 50, 10);
+  this.paddle = new Paddle(175, 10, 200, 30);
 }
 
 Player.prototype.render = function() {
@@ -154,14 +159,15 @@ function Ball(x, y) {
   this.y = y;
   this.x_speed = 0;
   this.y_speed = 3;
-  this.radius = 5;
+  this.radius = 8;
 }
 
 Ball.prototype.render = function() {
   context.beginPath();
   context.arc(this.x, this.y, this.radius, 2 * Math.PI, false);
-  context.fillStyle = "#FFFFFF";
+  context.fillStyle = "#00000F";
   context.fill();
+  drawBall(this.x, this.y, 40);
 };
 
 var player = new Player();
@@ -177,4 +183,19 @@ window.addEventListener("keydown", function(event) {
 window.addEventListener("keyup", function(event) {
   delete keysDown[event.keyCode];
 });
+
+function drawBall(centerX, centerY, radius) {
+    // get the ball diameter
+    var diameter = radius * 2;
+
+    context.drawImage(
+        img,
+        // the region of clipping from the img
+        0, 0, img.width, img.height,
+        // the region of drawing the ball on the canvas
+        centerX - radius, centerY - radius, diameter, diameter
+    );
+}
+
+
 
